@@ -130,6 +130,8 @@
 #include "editor/plugins/voxel_gi_editor_plugin.h"
 #include "editor/register_exporters.h"
 
+#include "editor/plugins/hlod_baker_editor_plugin.h" //TanGram:HLODBaker
+
 void register_editor_types() {
 	OS::get_singleton()->benchmark_begin_measure("Editor", "Register Types");
 
@@ -218,6 +220,7 @@ void register_editor_types() {
 	EditorPlugins::add_by_type<GradientTexture2DEditorPlugin>();
 	EditorPlugins::add_by_type<InputEventEditorPlugin>();
 	EditorPlugins::add_by_type<LightmapGIEditorPlugin>();
+	EditorPlugins::add_by_type<HLODBakerEditorPlugin>();//TanGram: HLODBaker
 	EditorPlugins::add_by_type<MaterialEditorPlugin>();
 	EditorPlugins::add_by_type<MeshEditorPlugin>();
 	EditorPlugins::add_by_type<MeshInstance3DEditorPlugin>();

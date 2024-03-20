@@ -75,6 +75,7 @@
 #include "editor/plugins/gizmos/vehicle_body_3d_gizmo_plugin.h"
 #include "editor/plugins/gizmos/visible_on_screen_notifier_3d_gizmo_plugin.h"
 #include "editor/plugins/gizmos/voxel_gi_gizmo_plugin.h"
+#include "editor/plugins/gizmos/hlod_baker_gizmo_plugin.h" //TanGram: HLODBaker
 #include "editor/plugins/node_3d_editor_gizmos.h"
 #include "editor/scene_tree_dock.h"
 #include "scene/3d/camera_3d.h"
@@ -8091,6 +8092,7 @@ void Node3DEditor::_register_all_gizmos() {
 	add_gizmo_plugin(Ref<DecalGizmoPlugin>(memnew(DecalGizmoPlugin)));
 	add_gizmo_plugin(Ref<VoxelGIGizmoPlugin>(memnew(VoxelGIGizmoPlugin)));
 	add_gizmo_plugin(Ref<LightmapGIGizmoPlugin>(memnew(LightmapGIGizmoPlugin)));
+	add_gizmo_plugin(Ref<HLODBakerGizmoPlugin>(memnew(HLODBakerGizmoPlugin))); //TanGram: HLODBaker
 	add_gizmo_plugin(Ref<LightmapProbeGizmoPlugin>(memnew(LightmapProbeGizmoPlugin)));
 	add_gizmo_plugin(Ref<CollisionObject3DGizmoPlugin>(memnew(CollisionObject3DGizmoPlugin)));
 	add_gizmo_plugin(Ref<CollisionShape3DGizmoPlugin>(memnew(CollisionShape3DGizmoPlugin)));
