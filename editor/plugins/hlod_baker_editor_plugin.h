@@ -26,12 +26,15 @@ SOFTWARE.
 #define HLOD_BAKER_EDITOR_PLUGIN_H
 
 #include "editor/editor_plugin.h"
+#include "scene/3d/hlod_baker.h"
 
 struct EditorProgress;
 class EditorFileDialog;
 
 class HLODBakerEditorPlugin : public EditorPlugin {
 	GDCLASS(HLODBakerEditorPlugin, EditorPlugin);
+
+	HLODBaker *hlodbaker = nullptr;
 
 	Button *bake = nullptr;
 
@@ -41,6 +44,12 @@ protected:
 	static void _bind_methods();
 
 public:
+	virtual String get_name() const override { return "HLODBaker"; }
+	bool has_main_screen() const override { return false; }
+	virtual void edit(Object *p_object) override;
+	virtual bool handles(Object *p_object) const override;
+	virtual void make_visible(bool p_visible) override;
+
 	HLODBakerEditorPlugin();
 };
 

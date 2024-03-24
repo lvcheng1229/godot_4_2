@@ -240,6 +240,7 @@
 #include "scene/3d/label_3d.h"
 #include "scene/3d/light_3d.h"
 #include "scene/3d/lightmap_gi.h"
+#include "scene/3d/hlod_baker.h" //TanGram: HLODBaker
 #include "scene/3d/lightmap_probe.h"
 #include "scene/3d/marker_3d.h"
 #include "scene/3d/mesh_instance_3d.h"
@@ -567,6 +568,7 @@ void register_scene_types() {
 	GDREGISTER_CLASS(VoxelGI);
 	GDREGISTER_CLASS(VoxelGIData);
 	GDREGISTER_CLASS(LightmapGI);
+	GDREGISTER_CLASS(HLODBaker);//TanGram: HLODBaker
 	GDREGISTER_CLASS(LightmapGIData);
 	GDREGISTER_CLASS(LightmapProbe);
 	GDREGISTER_ABSTRACT_CLASS(Lightmapper);

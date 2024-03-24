@@ -35,6 +35,27 @@ void HLODBakerEditorPlugin::_bind_methods() {
 	ClassDB::bind_method("_bake", &HLODBakerEditorPlugin::_bake);
 }
 
+void HLODBakerEditorPlugin::edit(Object *p_object) {
+	HLODBaker *s = Object::cast_to<HLODBaker>(p_object);
+	if (!s) {
+		return;
+	}
+
+	hlodbaker = s;
+}
+
+bool HLODBakerEditorPlugin::handles(Object *p_object) const {
+	return p_object->is_class("HLODBaker");
+}
+
+void HLODBakerEditorPlugin::make_visible(bool p_visible) {
+	if (p_visible) {
+		bake->show();
+	} else {
+		bake->hide();
+	}
+}
+
 HLODBakerEditorPlugin::HLODBakerEditorPlugin() {
 	bake = memnew(Button);
 	bake->set_theme_type_variation("FlatButton");

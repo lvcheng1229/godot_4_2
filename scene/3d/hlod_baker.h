@@ -33,7 +33,7 @@ class HLODBaker : public VisualInstance3D {
 
 public:
 	HLODBaker();
-}
+};
 
 #endif
 

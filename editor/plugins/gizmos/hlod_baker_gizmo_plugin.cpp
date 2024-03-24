@@ -24,6 +24,10 @@ SOFTWARE.
 
 #include "hlod_baker_gizmo_plugin.h"
 
+#include "editor/editor_node.h"
+#include "editor/editor_settings.h"
+#include "editor/editor_string_names.h"
+#include "editor/plugins/node_3d_editor_plugin.h"
 #include "scene/3d/hlod_baker.h"
 
 bool HLODBakerGizmoPlugin::has_gizmo(Node3D *p_spatial) {
@@ -39,7 +43,11 @@ int HLODBakerGizmoPlugin::get_priority() const {
 }
 
 void HLODBakerGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
+	Ref<Material> icon = get_material("hlod_baker_icon", p_gizmo);
+	p_gizmo->clear();
+	p_gizmo->add_unscaled_billboard(icon, 0.05);
 }
 
 HLODBakerGizmoPlugin::HLODBakerGizmoPlugin() {
+	create_icon_material("hlod_baker_icon", EditorNode::get_singleton()->get_editor_theme()->get_icon(SNAME("GizmoHLODBaker"), EditorStringName(EditorIcons)));
 }
