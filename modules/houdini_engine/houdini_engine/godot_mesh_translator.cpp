@@ -32,7 +32,7 @@ bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_
 		Array a = input_mesh -> surface_get_arrays(i);
 
 		Vector<Vector3> vertices = a[Mesh::ARRAY_VERTEX];
-		Vector<Vector2> uv = a[Mesh::ARRAY_TEX_UV2];
+		Vector<Vector2> uv = a[Mesh::ARRAY_TEX_UV];
 		Vector<Vector3> normals = a[Mesh::ARRAY_NORMAL];
 
 		Vector<int> index = a[Mesh::ARRAY_INDEX];
@@ -98,15 +98,63 @@ bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_
 	part.type = HAPI_PARTTYPE_MESH;
 
 	// Create point attribute info.
-	HAPI_AttributeInfo attribute_info_point;
-	HoudiniApi::attribute_info_init(&attribute_info_point);
-	attribute_info_point.count = part.pointCount;
-	attribute_info_point.tupleSize = 3;
-	attribute_info_point.exists = true;
-	attribute_info_point.owner = HAPI_ATTROWNER_POINT;
-	attribute_info_point.storage = HAPI_STORAGETYPE_FLOAT;
-	attribute_info_point.originalOwner = HAPI_ATTROWNER_INVALID;
-	HoudiniApi::attribute_add(HoudiniEngine::get().get_session(), houdini_node.get_input_node_id(), 0, HAPI_ATTRIB_POSITION, &attribute_info_point);
+	{
+		HAPI_AttributeInfo attribute_info_point;
+		HoudiniApi::attribute_info_init(&attribute_info_point);
+		attribute_info_point.count = part.pointCount; //TODO:!!!!!!!!!!!!!!!!
+		attribute_info_point.tupleSize = 3;
+		attribute_info_point.exists = true;
+		attribute_info_point.owner = HAPI_ATTROWNER_POINT;
+		attribute_info_point.storage = HAPI_STORAGETYPE_FLOAT;
+		attribute_info_point.originalOwner = HAPI_ATTROWNER_INVALID;
+		attribute_info_point.exists = true;
+		HoudiniApi::attribute_add(HoudiniEngine::get().get_session(), node_id, 0, HAPI_ATTRIB_POSITION, &attribute_info_point);
+		HoudiniApi::set_attribute_float_data(
+				HoudiniEngine::get().get_session(),
+				node_id, 0, HAPI_ATTRIB_POSITION,
+				&attribute_info_point,
+				(float *)houdini_mesh_data.points.ptrw(),
+				0, attribute_info_point.count);
+	}
+
+	// Create attribute for normals.
+	{
+		HAPI_AttributeInfo attribute_info_normal;
+		HoudiniApi::attribute_info_init(&attribute_info_normal);
+		attribute_info_normal.tupleSize = 3;
+		attribute_info_normal.count = houdini_mesh_data.normal.size();
+		attribute_info_normal.exists = true;
+		attribute_info_normal.owner = HAPI_ATTROWNER_VERTEX;
+		attribute_info_normal.storage = HAPI_STORAGETYPE_FLOAT;
+		attribute_info_normal.originalOwner = HAPI_ATTROWNER_INVALID;
+		HoudiniApi::attribute_add(HoudiniEngine::get().get_session(), node_id, 0, HAPI_ATTRIB_NORMAL, &attribute_info_normal);
+		HoudiniApi::set_attribute_float_data(
+				HoudiniEngine::get().get_session(),
+				node_id, 0, HAPI_ATTRIB_NORMAL,
+				&attribute_info_normal,
+				(float *)houdini_mesh_data.normal.ptrw(),
+				0, attribute_info_normal.count);
+	}
+
+	// Create attribute for normals.
+	{
+		HAPI_AttributeInfo attribute_info_uv;
+		HoudiniApi::attribute_info_init(&attribute_info_uv);
+		attribute_info_uv.count = NumVertexInstances;
+		attribute_info_uv.tupleSize = 3;
+		attribute_info_uv.exists = true;
+		attribute_info_uv.owner = HAPI_ATTROWNER_VERTEX;
+		attribute_info_uv.storage = HAPI_STORAGETYPE_FLOAT;
+		attribute_info_uv.originalOwner = HAPI_ATTROWNER_INVALID;
+		HoudiniApi::attribute_add(HoudiniEngine::get().get_session(), node_id, 0, HAPI_ATTRIB_UV, &attribute_info_uv);
+		HoudiniApi::set_attribute_float_data(
+				HoudiniEngine::get().get_session(),
+				node_id, 0, HAPI_ATTRIB_UV,
+				&attribute_info_uv,
+				(float *)houdini_mesh_data.uv.ptrw(),
+				0, attribute_info_uv.count);
+	}
+
 
 
 

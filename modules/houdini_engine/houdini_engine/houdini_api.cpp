@@ -10,6 +10,7 @@ void HoudiniApi::initialize_hapi(void *houdini_handle) {
 	void *partion_info_init_ptr = &partion_info_init;
 	void *attribute_info_init_ptr = &attribute_info_init;
 	void *attribute_add_ptr = &attribute_add;
+	void *set_attribute_float_data_ptr = &set_attribute_float_data;
 
 	OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_CreateNode", create_node_ptr);
 	OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_CreateInputNode", create_input_node_ptr);
@@ -19,4 +20,5 @@ void HoudiniApi::initialize_hapi(void *houdini_handle) {
 	OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_PartInfo_Init", partion_info_init_ptr);
 	OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_AttributeInfo_Init", attribute_info_init_ptr);
 	OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_AddAttribute", attribute_add_ptr);
+	OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_SetAttributeFloatData", set_attribute_float_data_ptr);
 }
