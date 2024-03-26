@@ -81,20 +81,23 @@ bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_
 		}
 	}
 
+
+	const uint32_t num_triangles = houdini_mesh_data.points.size() / 3;
+	const uint32_t num_vertex_instances = houdini_mesh_data.points.size();
+	const uint32_t num_vertices = num_vertex_instances;
+
 	// Create part.
 	HAPI_PartInfo part;
 	HoudiniApi::partion_info_init(&part);
-
-
 	part.id = 0;
 	part.nameSH = 0;
 	part.attributeCounts[HAPI_ATTROWNER_POINT] = 0;
 	part.attributeCounts[HAPI_ATTROWNER_PRIM] = 0;
 	part.attributeCounts[HAPI_ATTROWNER_VERTEX] = 0;
 	part.attributeCounts[HAPI_ATTROWNER_DETAIL] = 0;
-	part.vertexCount = NumVertexInstances;
-	part.faceCount = NumTriangles;
-	part.pointCount = NumVertices;
+	part.vertexCount = num_vertex_instances; // index count
+	part.faceCount = num_triangles;
+	part.pointCount = num_vertices;
 	part.type = HAPI_PARTTYPE_MESH;
 
 	// Create point attribute info.
@@ -109,12 +112,12 @@ bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_
 		attribute_info_point.originalOwner = HAPI_ATTROWNER_INVALID;
 		attribute_info_point.exists = true;
 		HoudiniApi::attribute_add(HoudiniEngine::get().get_session(), node_id, 0, HAPI_ATTRIB_POSITION, &attribute_info_point);
-		HoudiniApi::set_attribute_float_data(
+		HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::set_attribute_float_data(
 				HoudiniEngine::get().get_session(),
 				node_id, 0, HAPI_ATTRIB_POSITION,
 				&attribute_info_point,
 				(float *)houdini_mesh_data.points.ptrw(),
-				0, attribute_info_point.count);
+				0, attribute_info_point.count),false);
 	}
 
 	// Create attribute for normals.
@@ -128,35 +131,44 @@ bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_
 		attribute_info_normal.storage = HAPI_STORAGETYPE_FLOAT;
 		attribute_info_normal.originalOwner = HAPI_ATTROWNER_INVALID;
 		HoudiniApi::attribute_add(HoudiniEngine::get().get_session(), node_id, 0, HAPI_ATTRIB_NORMAL, &attribute_info_normal);
-		HoudiniApi::set_attribute_float_data(
+		HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::set_attribute_float_data(
 				HoudiniEngine::get().get_session(),
 				node_id, 0, HAPI_ATTRIB_NORMAL,
 				&attribute_info_normal,
-				(float *)houdini_mesh_data.normal.ptrw(),
-				0, attribute_info_normal.count);
+				(float *)houdini_mesh_data.normal.ptr(),
+										   0, attribute_info_normal.count),
+				false);
 	}
 
-	// Create attribute for normals.
+	// Create attribute for uvs.
 	{
 		HAPI_AttributeInfo attribute_info_uv;
 		HoudiniApi::attribute_info_init(&attribute_info_uv);
-		attribute_info_uv.count = NumVertexInstances;
+		attribute_info_uv.count = houdini_mesh_data.uv.size();
 		attribute_info_uv.tupleSize = 3;
 		attribute_info_uv.exists = true;
 		attribute_info_uv.owner = HAPI_ATTROWNER_VERTEX;
 		attribute_info_uv.storage = HAPI_STORAGETYPE_FLOAT;
 		attribute_info_uv.originalOwner = HAPI_ATTROWNER_INVALID;
 		HoudiniApi::attribute_add(HoudiniEngine::get().get_session(), node_id, 0, HAPI_ATTRIB_UV, &attribute_info_uv);
-		HoudiniApi::set_attribute_float_data(
+		HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::set_attribute_float_data(
 				HoudiniEngine::get().get_session(),
 				node_id, 0, HAPI_ATTRIB_UV,
 				&attribute_info_uv,
-				(float *)houdini_mesh_data.uv.ptrw(),
-				0, attribute_info_uv.count);
+				(float *)houdini_mesh_data.uv.ptr(),
+				0, attribute_info_uv.count),false);
 	}
 
+	HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::set_vertex_list(HoudiniEngine::get().get_session(), node_id, 0, indices.ptr(), 0, indices.size()), false);
 
+	Vector<int> face_array;
+	face_array.resize(part.faceCount);
 
+	for (int index = 0; index < face_array.size();index++) {
+		face_array.set(index, 3);
+	}
 
+	HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::set_face_counts(HoudiniEngine::get().get_session(), node_id, 0, face_array.ptr(), 0, face_array.size()), false);
+	HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::commit_geo(HoudiniEngine::get().get_session(), node_id), false);
 	return true;
 }

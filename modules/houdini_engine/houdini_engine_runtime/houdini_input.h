@@ -8,7 +8,7 @@ public:
 
 	Vector<HoudiniInputNode> *get_houdini_input_array(HoudiniInputType houdini_input_type);
 
-	inline void set_houdini_input_type(HoudiniInputType &input_type) { type = input_type; };
+	inline void set_houdini_input_type(HoudiniInputType input_type) { type = input_type; };
 	inline HoudiniInputType get_houdini_input_type() { return type; };
 
 	inline int get_input_node_id() const { return input_node_id; };

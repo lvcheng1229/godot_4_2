@@ -6,7 +6,11 @@
 #include "houdini_engine.h"
 
 
-static HoudiniEngine *houdini__engine;
+static HoudiniEngine *houdini_engine = nullptr;
+
+HoudiniEngine &HoudiniEngine::get() {
+	return *houdini_engine;
+}
 
 void initialize_houdini_engine_module(ModuleInitializationLevel p_level) {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
@@ -14,8 +18,7 @@ void initialize_houdini_engine_module(ModuleInitializationLevel p_level) {
 	}
 	ClassDB::register_class<HoudiniEngine>();
 
-	houdini__engine = new HoudiniEngine();
-	houdini__engine->houdini_engine_instance = houdini__engine;
+	houdini_engine = new HoudiniEngine();
 }
 
 void uninitialize_houdini_engine_module(ModuleInitializationLevel p_level) {
@@ -23,5 +26,5 @@ void uninitialize_houdini_engine_module(ModuleInitializationLevel p_level) {
 		return;
 	}
 
-	delete houdini__engine;
+	delete houdini_engine;
 }

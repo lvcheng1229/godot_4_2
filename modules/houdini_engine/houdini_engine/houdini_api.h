@@ -7,8 +7,12 @@ typedef HAPI_Result (*create_inprocess_session_func_ptr)(HAPI_Session *session);
 typedef HAPI_Result (*initlialize_func_ptr)(const HAPI_Session *session, const HAPI_CookOptions *cook_options, HAPI_Bool use_cooking_thread, int cooking_thread_stack_size, const char *houdini_environment_files, const char *otl_search_path, const char *dso_search_path, const char *image_dso_search_path, const char *audio_dso_search_path);
 typedef HAPI_Result (*connect_node_input_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, int input_index, HAPI_NodeId node_id_to_connect, int output_index);
 typedef HAPI_Result (*set_attribute_float_data_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_PartId part_id, const char *name, const HAPI_AttributeInfo *attr_info, const float *data_array, int start, int length);
+typedef HAPI_Result (*set_vertex_list_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_PartId part_id, const int *vertex_list_array, int start, int length);
+typedef HAPI_Result (*set_face_counts_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_PartId part_id, const int *face_counts_array, int start, int length);
 typedef void (*partion_info_init_func_ptr)(HAPI_PartInfo *in);
 typedef void (*attributeinfo_init_func_ptr)(HAPI_AttributeInfo *in);
+typedef HAPI_Result (*commit_geo_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id);
+typedef HAPI_Result (*load_asset_library_from_file_func_ptr)(const HAPI_Session *session, const char *file_path, HAPI_Bool allow_overwrite, HAPI_AssetLibraryId *library_id);
 
 struct HoudiniApi {
 public:
@@ -27,7 +31,18 @@ public:
 	//typedef HAPI_Result (*set_attribute_float_data_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_PartId part_id, const char *name, const HAPI_AttributeInfo *attr_info, const float *data_array, int start, int length);
 	static set_attribute_float_data_func_ptr set_attribute_float_data;
 
+	//typedef HAPI_Result (*set_vertex_list_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_PartId part_id, const int *vertex_list_array, int start, int length);
+	static set_vertex_list_func_ptr set_vertex_list;
+
+	//typedef HAPI_Result (*set_face_counts_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_PartId part_id, const int *face_counts_array, int start, int length);
+	static set_face_counts_func_ptr set_face_counts;
+
+	//typedef HAPI_Result (*commit_geo_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id);
+	static commit_geo_func_ptr commit_geo;
+
 	static partion_info_init_func_ptr partion_info_init;
 
 	static attributeinfo_init_func_ptr attribute_info_init;
+
+	static load_asset_library_from_file_func_ptr load_asset_library_from_file;
 };

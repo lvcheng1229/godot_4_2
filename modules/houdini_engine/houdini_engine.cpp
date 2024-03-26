@@ -2,9 +2,7 @@
 #include "houdini_engine/houdini_engine_utils.h"
 #include "houdini_engine/houdini_api.h"
 
-HoudiniEngine &HoudiniEngine::get() {
-	return *houdini_engine_instance;
-}
+
 
 const HAPI_Session *HoudiniEngine::get_session() {
 	return &session;
