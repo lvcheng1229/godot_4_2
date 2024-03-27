@@ -13,6 +13,14 @@ typedef void (*partion_info_init_func_ptr)(HAPI_PartInfo *in);
 typedef void (*attributeinfo_init_func_ptr)(HAPI_AttributeInfo *in);
 typedef HAPI_Result (*commit_geo_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id);
 typedef HAPI_Result (*load_asset_library_from_file_func_ptr)(const HAPI_Session *session, const char *file_path, HAPI_Bool allow_overwrite, HAPI_AssetLibraryId *library_id);
+typedef HAPI_Result (*get_available_asset_count_func_ptr)(const HAPI_Session *session, HAPI_AssetLibraryId library_id, int *asset_count);
+typedef HAPI_Result (*get_available_assets_func_ptr)(const HAPI_Session *session, HAPI_AssetLibraryId library_id, HAPI_StringHandle *asset_names_array, int asset_count);
+typedef HAPI_Result (*get_string_buf_length_func_ptr)(const HAPI_Session *session, HAPI_StringHandle string_handle, int *buffer_length);
+typedef HAPI_Result (*get_string_func_ptr)(const HAPI_Session *session, HAPI_StringHandle string_handle, char *string_value, int length);
+
+typedef HAPI_Result (*cook_node_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, const HAPI_CookOptions *cook_options);
+typedef HAPI_Result (*get_status_func_ptr)(const HAPI_Session *session, HAPI_StatusType status_type, int *status);
+typedef void (*cook_options_init_func_ptr)(HAPI_CookOptions *in);
 
 struct HoudiniApi {
 public:
@@ -45,4 +53,14 @@ public:
 	static attributeinfo_init_func_ptr attribute_info_init;
 
 	static load_asset_library_from_file_func_ptr load_asset_library_from_file;
+
+	static get_available_asset_count_func_ptr get_available_asset_count;
+	static get_available_assets_func_ptr get_available_assets;
+
+	static get_string_buf_length_func_ptr get_string_buf_length;
+	static get_string_func_ptr get_string;
+
+	static cook_node_func_ptr cook_node;
+	static get_status_func_ptr get_status;
+	static cook_options_init_func_ptr cook_options_init;
 };

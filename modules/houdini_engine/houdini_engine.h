@@ -9,7 +9,7 @@ class HoudiniEngine : public RefCounted {
 public:
 	static HoudiniEngine &get();
 	const HAPI_Session *get_session();
-	bool start_session(HAPI_Session *&SessionPtr);
+	bool start_session();
 
 	HoudiniEngine();
 
