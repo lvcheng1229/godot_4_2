@@ -22,6 +22,15 @@ typedef HAPI_Result (*cook_node_func_ptr)(const HAPI_Session *session, HAPI_Node
 typedef HAPI_Result (*get_status_func_ptr)(const HAPI_Session *session, HAPI_StatusType status_type, int *status);
 typedef void (*cook_options_init_func_ptr)(HAPI_CookOptions *in);
 
+typedef HAPI_Result (*start_thrift_named_pipe_server_func_ptr)(const HAPI_ThriftServerOptions *options, const char *pipe_name, HAPI_ProcessId *process_id, const char *log_file);
+typedef HAPI_Result (*create_thrift_named_pipe_session_func_ptr)(HAPI_Session *session, const char *pipe_name);
+
+typedef HAPI_Result (*get_status_string_func_ptr)(const HAPI_Session *session, HAPI_StatusType status_type, char *string_value, int length);
+typedef HAPI_Result (*get_status_string_buf_length_func_ptr)(const HAPI_Session *session, HAPI_StatusType status_type, HAPI_StatusVerbosity verbosity, int *buffer_length);
+
+typedef HAPI_Result (*get_connection_error_func_ptr )(char *string_value, int length, HAPI_Bool clear);
+typedef HAPI_Result (*get_connection_error_length_func_ptr)(int *buffer_length);
+
 struct HoudiniApi {
 public:
 	static void initialize_hapi(void* houdini_handle);
@@ -63,4 +72,12 @@ public:
 	static cook_node_func_ptr cook_node;
 	static get_status_func_ptr get_status;
 	static cook_options_init_func_ptr cook_options_init;
+
+	static start_thrift_named_pipe_server_func_ptr start_thrift_named_pipe_server;
+	static create_thrift_named_pipe_session_func_ptr create_thrift_named_pipe_session;
+	static get_status_string_func_ptr get_status_string;
+	static get_status_string_buf_length_func_ptr get_status_string_buf_length;
+
+	static get_connection_error_func_ptr get_connection_error;
+	static get_connection_error_length_func_ptr get_connection_error_length;
 };

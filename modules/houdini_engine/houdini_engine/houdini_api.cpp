@@ -21,6 +21,12 @@ get_string_func_ptr HoudiniApi::get_string = nullptr;
 cook_node_func_ptr HoudiniApi::cook_node = nullptr;
 get_status_func_ptr HoudiniApi::get_status = nullptr;
 cook_options_init_func_ptr HoudiniApi::cook_options_init = nullptr;
+start_thrift_named_pipe_server_func_ptr HoudiniApi::start_thrift_named_pipe_server = nullptr;
+create_thrift_named_pipe_session_func_ptr HoudiniApi::create_thrift_named_pipe_session = nullptr;
+get_status_string_func_ptr HoudiniApi::get_status_string = nullptr;
+get_status_string_buf_length_func_ptr HoudiniApi::get_status_string_buf_length = nullptr;
+get_connection_error_length_func_ptr HoudiniApi::get_connection_error_length = nullptr;
+get_connection_error_func_ptr HoudiniApi::get_connection_error = nullptr;
 
 void valid_symbol(Error error) {
 	if (error != OK) {
@@ -49,6 +55,12 @@ void HoudiniApi::initialize_hapi(void *houdini_handle) {
 	void *cook_node_ptr;
 	void *get_status_ptr;
 	void *cook_options_init_ptr;
+	void *start_thrift_named_pipe_server_ptr;
+	void *create_thrift_named_pipe_session_ptr;
+	void *get_status_string_ptr;
+	void *get_status_string_buf_length_ptr;
+	void *get_connection_error_length_ptr;
+	void *get_connection_error_ptr;
 
 	Error error;
 	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_CreateNode", create_node_ptr));
@@ -71,6 +83,14 @@ void HoudiniApi::initialize_hapi(void *houdini_handle) {
 	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_CookNode", cook_node_ptr));
 	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetStatus", get_status_ptr));
 	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_CookOptions_Init", cook_options_init_ptr));
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_StartThriftNamedPipeServer", start_thrift_named_pipe_server_ptr));
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_CreateThriftNamedPipeSession", create_thrift_named_pipe_session_ptr));
+
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetStatusString", get_status_string_ptr));
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetStatusStringBufLength", get_status_string_buf_length_ptr));
+
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetConnectionErrorLength", get_connection_error_length_ptr));
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetConnectionError", get_connection_error_ptr));
 
 	create_node = (create_node_func_ptr)create_node_ptr;
 	create_input_node = (create_input_node_func_ptr)create_input_node_ptr;
@@ -92,4 +112,10 @@ void HoudiniApi::initialize_hapi(void *houdini_handle) {
 	cook_node = (cook_node_func_ptr)cook_node_ptr;
 	get_status = (get_status_func_ptr)get_status_ptr;
 	cook_options_init = (cook_options_init_func_ptr)cook_options_init_ptr;
+	start_thrift_named_pipe_server = (start_thrift_named_pipe_server_func_ptr)start_thrift_named_pipe_server_ptr;
+	create_thrift_named_pipe_session = (create_thrift_named_pipe_session_func_ptr)create_thrift_named_pipe_session_ptr;
+	get_status_string = (get_status_string_func_ptr)get_status_string_ptr;
+	get_status_string_buf_length = (get_status_string_buf_length_func_ptr)get_status_string_buf_length_ptr;
+	get_connection_error_length = (get_connection_error_length_func_ptr)get_connection_error_length_ptr;
+	get_connection_error = (get_connection_error_func_ptr)get_connection_error_ptr;
 }

@@ -28,7 +28,18 @@ SOFTWARE.
 #include "editor/gui/editor_file_dialog.h"
 
 void HLODBakerEditorPlugin::_bake() {
-
+	bool bake_result = true;
+	if (hlodbaker) {
+		const uint64_t time_started = OS::get_singleton()->get_ticks_msec();
+		if (get_tree()->get_edited_scene_root()) {
+			//if () hlod_data_is_valid
+			if (get_tree()->get_edited_scene_root() == hlodbaker) {
+				bake_result = hlodbaker->bake(hlodbaker);
+			} else {
+				bake_result = hlodbaker->bake(hlodbaker->get_parent());
+			}
+		}
+	}
 }
 
 void HLODBakerEditorPlugin::_bind_methods() {

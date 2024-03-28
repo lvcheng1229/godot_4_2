@@ -80,8 +80,8 @@
 /// [HAPI_CACHE]
 /// Common cache names. You can see these same cache names in the
 /// Cache Manager window in Houdini (Windows > Cache Manager).
-#define HAPI_CACHE_COP2_COOK                 "COP Cook Cache"
-#define HAPI_CACHE_COP2_FLIPBOOK             "COP Flipbook Cache"
+#define HAPI_CACHE_COP_COOK                 "COP Cook Cache"
+#define HAPI_CACHE_COP_FLIPBOOK             "COP Flipbook Cache"
 #define HAPI_CACHE_IMAGE                    "Image Cache"
 #define HAPI_CACHE_OBJ                      "Object Transform Cache"
 #define HAPI_CACHE_GL_TEXTURE               "OpenGL Texture Cache"
@@ -623,7 +623,6 @@ enum HAPI_StorageType
     HAPI_STORAGETYPE_UINT8,
     HAPI_STORAGETYPE_INT8,
     HAPI_STORAGETYPE_INT16,
-    HAPI_STORAGETYPE_DICTIONARY,
 
     HAPI_STORAGETYPE_INT_ARRAY,
     HAPI_STORAGETYPE_INT64_ARRAY,
@@ -633,7 +632,6 @@ enum HAPI_StorageType
     HAPI_STORAGETYPE_UINT8_ARRAY,
     HAPI_STORAGETYPE_INT8_ARRAY,
     HAPI_STORAGETYPE_INT16_ARRAY,
-    HAPI_STORAGETYPE_DICTIONARY_ARRAY,
 
     HAPI_STORAGETYPE_MAX
 };
@@ -867,7 +865,7 @@ enum HAPI_CacheProperty
     HAPI_CACHEPROP_MAX, /// Max cache memory limit in MB.
 
     /// How aggressive to cull memory. This only works for:
-    ///     - ::HAPI_CACHE_COP2_COOK where:
+    ///     - ::HAPI_CACHE_COP_COOK where:
     ///         0   ->  Never reduce inactive cache.
     ///         1   ->  Always reduce inactive cache.
     ///     - ::HAPI_CACHE_OBJ where:
@@ -961,8 +959,6 @@ enum HAPI_PDG_EventType
     HAPI_PDG_EVENT_NODE_CONNECT,
     /// Sent when a node is disconnected from another node
     HAPI_PDG_EVENT_NODE_DISCONNECT,
-    /// Sent when a node cooks for the first time
-    HAPI_PDG_EVENT_NODE_FIRST_COOK,
 
     /// Deprecated
     HAPI_PDG_EVENT_WORKITEM_SET_INT,
@@ -1008,12 +1004,7 @@ enum HAPI_PDG_EventType
     /// Deprecated
     HAPI_PDG_EVENT_SERVICE_MANAGER_ALL,
 
-    /// Sent when a node finishes cooking
-    HAPI_PDG_EVENT_NODE_COOKED,
-    /// Sent when a node finished generating
-    HAPI_PDG_EVENT_NODE_GENERATED,
-
-    HAPI_PDG_CONTEXT_EVENTS,
+    HAPI_PDG_CONTEXT_EVENTS
 };
 HAPI_C_ENUM_TYPEDEF( HAPI_PDG_EventType )
 

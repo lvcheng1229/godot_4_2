@@ -27,11 +27,13 @@ SOFTWARE.
 
 #include "core/templates/local_vector.h"
 #include "scene/3d/visual_instance_3d.h"
+#include "scene/3d/mesh_instance_3d.h"
 
 class HLODBaker : public VisualInstance3D {
 	GDCLASS(HLODBaker, VisualInstance3D);
 
 public:
+	bool bake(Node *p_from_node);
 	HLODBaker();
 };
 

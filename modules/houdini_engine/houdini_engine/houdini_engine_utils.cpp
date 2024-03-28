@@ -4,7 +4,7 @@
 
 //temporaty code
 void *HoudiniEngineUtils::load_lib_api() {
-	String houdini_localtion = String(("G:\\Houdini20\\bin\\libHAPIL.dll"));//HoudiniLocation = FString::Printf(TEXT("C:\\Program Files\\Side Effects Software\\Houdini %s\\%s"), *HoudiniVersionString, HAPI_HFS_SUBFOLDER_WINDOWS);
+	String houdini_localtion = String(("C:\\Program Files\\Side Effects Software\\Houdini 19.5.303\\bin\\libHAPIL.dll"));//HoudiniLocation = FString::Printf(TEXT("C:\\Program Files\\Side Effects Software\\Houdini %s\\%s"), *HoudiniVersionString, HAPI_HFS_SUBFOLDER_WINDOWS);
 	void *library = nullptr; 
 	OS::get_singleton()->open_dynamic_library(houdini_localtion, library, true, nullptr);
 	return library;

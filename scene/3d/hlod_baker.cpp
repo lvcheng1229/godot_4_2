@@ -24,5 +24,15 @@ SOFTWARE.
 
 #include "hlod_baker.h"
 
+bool HLODBaker::bake(Node *p_from_node) {
+
+	MeshInstance3D *mi = Object::cast_to<MeshInstance3D>(p_from_node);
+
+
+
+
+	return false;
+}
+
 HLODBaker::HLODBaker() {
 }
