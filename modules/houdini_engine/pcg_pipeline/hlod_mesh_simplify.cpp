@@ -6,7 +6,7 @@
 #include "../houdini_engine/houdini_engine_string.h"
 #include "../houdini_engine/houdini_engine_utils.h"
 
-void HLODMeshBuilder::hlod_mesh_simplify(const Vector<HlodInputMesh> &input_meshs) {
+void HLODMeshSimplifier::hlod_mesh_simplify(const Vector<HlodInputMesh> &input_meshs) {
 
 	// Create houdini input geos
 	HoudiniInput houdini_input;
@@ -45,7 +45,7 @@ void HLODMeshBuilder::hlod_mesh_simplify(const Vector<HlodInputMesh> &input_mesh
 	HoudiniEngineUtils::hapi_cook_node(houdini_input.get_hda_node_id(), nullptr, true);
 }
 
-void HLODMeshBuilder::init() {
+void HLODMeshSimplifier::init() {
 	String code_path(__FILE__);
 	Vector<String> split_string = code_path.split("hlod_mesh_simplify.cpp");
 	String hda_path = split_string.get(0) + String("hda\\godot_simplify_mesh.hda");

@@ -1,16 +1,11 @@
 #pragma once
 #include "scene/resources/mesh.h"
+#include "scene/3d/hlod_baker.h"
 
-struct HlodInputMesh {
-	Transform3D xform;
-	Ref<Mesh> mesh;
-};
-
-class HLODMeshBuilder
-{
+class HLODMeshSimplifier : public IHLODMeshSimplifier {
 public:
 	void init();
-	void hlod_mesh_simplify(const Vector<HlodInputMesh> &input_meshs);
+	virtual void hlod_mesh_simplify(const Vector<HlodInputMesh> &input_meshs) override;
 private:
 	int hda_lib_id;
 };

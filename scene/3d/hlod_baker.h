@@ -29,12 +29,32 @@ SOFTWARE.
 #include "scene/3d/visual_instance_3d.h"
 #include "scene/3d/mesh_instance_3d.h"
 
+struct HlodInputMesh {
+	Transform3D xform;
+	Ref<Mesh> mesh;
+};
+
+class IHLODMeshSimplifier : public RefCounted {
+	GDCLASS(IHLODMeshSimplifier, RefCounted)
+public:
+	typedef IHLODMeshSimplifier *(*CreateFunc)();
+
+	static CreateFunc create_hlod_baker;
+
+	static Ref<IHLODMeshSimplifier> create();
+	virtual void hlod_mesh_simplify(const Vector<HlodInputMesh> &input_meshs) = 0;
+};
+
 class HLODBaker : public VisualInstance3D {
 	GDCLASS(HLODBaker, VisualInstance3D);
 
 public:
 	bool bake(Node *p_from_node);
 	HLODBaker();
+
+private:
+	void find_meshs(Node *p_from_node, Vector<HlodInputMesh> &hlod_meshs_found);
+
 };
 
 #endif

@@ -24,11 +24,21 @@ SOFTWARE.
 
 #include "hlod_baker.h"
 
+IHLODMeshSimplifier::CreateFunc IHLODMeshSimplifier::create_hlod_baker = nullptr;
+
+Ref<IHLODMeshSimplifier> IHLODMeshSimplifier::create() {
+	if (create_hlod_baker) {
+		return Ref<IHLODMeshSimplifier>(create_hlod_baker());
+	}
+	return Ref<IHLODMeshSimplifier>();
+}
+
+
+
 bool HLODBaker::bake(Node *p_from_node) {
 
-	MeshInstance3D *mi = Object::cast_to<MeshInstance3D>(p_from_node);
-
-
+	Ref<IHLODMeshSimplifier> hlod_mesh_simplifier = IHLODMeshSimplifier::create();
+	Vector<HlodInputMesh> hlod_input_meshs;
 
 
 	return false;
@@ -36,3 +46,41 @@ bool HLODBaker::bake(Node *p_from_node) {
 
 HLODBaker::HLODBaker() {
 }
+
+void HLODBaker::find_meshs(Node *p_from_node, Vector<HlodInputMesh> &hlod_meshs_found) {
+	MeshInstance3D *mi = Object::cast_to<MeshInstance3D>(p_from_node);
+
+	if (mi && mi->get_gi_mode() == GeometryInstance3D::GI_MODE_STATIC && mi->is_visible_in_tree()) {
+		Ref<Mesh> mesh = mi->get_mesh();
+
+		Ref<Mesh> mesh = mi->get_mesh();
+		if (mesh.is_valid()) {
+			bool surfaces_found = false;
+
+			bool found_uv = false;
+			bool found_normal = false;
+			bool found_tangent = false;
+
+			for (int i = 0; i < mesh->get_surface_count(); i++) {
+				if (mesh->surface_get_primitive_type(i) != Mesh::PRIMITIVE_TRIANGLES) {
+					continue;
+				}
+				if ((mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_TEX_UV)) {
+					found_uv = true;
+				}
+				if (!(mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_NORMAL)) {
+					found_normal = true;
+				}
+				if (!(mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_TANGENT)) {
+					found_tangent = true;
+				}
+			}
+
+			surfaces_found = found_uv && found_normal && found_tangent;
+
+			if (surfaces_found) {
+			}
+		}
+	}
+}
+
