@@ -39,6 +39,8 @@ bool HLODBaker::bake(Node *p_from_node) {
 
 	Ref<IHLODMeshSimplifier> hlod_mesh_simplifier = IHLODMeshSimplifier::create();
 	Vector<HlodInputMesh> hlod_input_meshs;
+	find_meshs(p_from_node, hlod_input_meshs);
+	hlod_mesh_simplifier->hlod_mesh_simplify(hlod_input_meshs);
 
 
 	return false;
@@ -50,9 +52,8 @@ HLODBaker::HLODBaker() {
 void HLODBaker::find_meshs(Node *p_from_node, Vector<HlodInputMesh> &hlod_meshs_found) {
 	MeshInstance3D *mi = Object::cast_to<MeshInstance3D>(p_from_node);
 
-	if (mi && mi->get_gi_mode() == GeometryInstance3D::GI_MODE_STATIC && mi->is_visible_in_tree()) {
-		Ref<Mesh> mesh = mi->get_mesh();
-
+	//if (mi && mi->get_gi_mode() == GeometryInstance3D::GI_MODE_STATIC && mi->is_visible_in_tree()) {
+	if (mi) {
 		Ref<Mesh> mesh = mi->get_mesh();
 		if (mesh.is_valid()) {
 			bool surfaces_found = false;
@@ -65,13 +66,13 @@ void HLODBaker::find_meshs(Node *p_from_node, Vector<HlodInputMesh> &hlod_meshs_
 				if (mesh->surface_get_primitive_type(i) != Mesh::PRIMITIVE_TRIANGLES) {
 					continue;
 				}
-				if ((mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_TEX_UV)) {
+				if (mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_TEX_UV) {
 					found_uv = true;
 				}
-				if (!(mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_NORMAL)) {
+				if (mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_NORMAL) {
 					found_normal = true;
 				}
-				if (!(mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_TANGENT)) {
+				if (mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_TANGENT) {
 					found_tangent = true;
 				}
 			}
@@ -79,8 +80,21 @@ void HLODBaker::find_meshs(Node *p_from_node, Vector<HlodInputMesh> &hlod_meshs_
 			surfaces_found = found_uv && found_normal && found_tangent;
 
 			if (surfaces_found) {
+				HlodInputMesh hlod_input_mesh;
+				hlod_input_mesh.xform = get_global_transform().affine_inverse() * mi->get_global_transform();
+				hlod_input_mesh.mesh = mesh;
+				hlod_meshs_found.push_back(hlod_input_mesh);
 			}
 		}
+	}
+
+	for (int i = 0; i < p_from_node->get_child_count(); i++) {
+		Node *child = p_from_node->get_child(i);
+		if (!child->get_owner()) {
+			continue; //maybe a helper
+		}
+
+		find_meshs(child, hlod_meshs_found);
 	}
 }
 

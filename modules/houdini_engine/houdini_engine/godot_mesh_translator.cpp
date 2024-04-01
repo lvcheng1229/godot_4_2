@@ -112,7 +112,7 @@ bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_
 		attribute_info_point.originalOwner = HAPI_ATTROWNER_INVALID;
 		attribute_info_point.exists = true;
 		HoudiniApi::attribute_add(HoudiniEngine::get().get_session(), node_id, 0, HAPI_ATTRIB_POSITION, &attribute_info_point);
-		HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::set_attribute_float_data(
+		HOUDINI_CHECK_CALL_ERROR_RETURN(HoudiniApi::set_attribute_float_data(
 				HoudiniEngine::get().get_session(),
 				node_id, 0, HAPI_ATTRIB_POSITION,
 				&attribute_info_point,
@@ -131,7 +131,7 @@ bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_
 		attribute_info_normal.storage = HAPI_STORAGETYPE_FLOAT;
 		attribute_info_normal.originalOwner = HAPI_ATTROWNER_INVALID;
 		HoudiniApi::attribute_add(HoudiniEngine::get().get_session(), node_id, 0, HAPI_ATTRIB_NORMAL, &attribute_info_normal);
-		HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::set_attribute_float_data(
+		HOUDINI_CHECK_CALL_ERROR_RETURN(HoudiniApi::set_attribute_float_data(
 				HoudiniEngine::get().get_session(),
 				node_id, 0, HAPI_ATTRIB_NORMAL,
 				&attribute_info_normal,
@@ -151,7 +151,7 @@ bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_
 		attribute_info_uv.storage = HAPI_STORAGETYPE_FLOAT;
 		attribute_info_uv.originalOwner = HAPI_ATTROWNER_INVALID;
 		HoudiniApi::attribute_add(HoudiniEngine::get().get_session(), node_id, 0, HAPI_ATTRIB_UV, &attribute_info_uv);
-		HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::set_attribute_float_data(
+		HOUDINI_CHECK_CALL_ERROR_RETURN(HoudiniApi::set_attribute_float_data(
 				HoudiniEngine::get().get_session(),
 				node_id, 0, HAPI_ATTRIB_UV,
 				&attribute_info_uv,
@@ -159,7 +159,7 @@ bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_
 				0, attribute_info_uv.count),false);
 	}
 
-	HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::set_vertex_list(HoudiniEngine::get().get_session(), node_id, 0, indices.ptr(), 0, indices.size()), false);
+	HOUDINI_CHECK_CALL_ERROR_RETURN(HoudiniApi::set_vertex_list(HoudiniEngine::get().get_session(), node_id, 0, indices.ptr(), 0, indices.size()), false);
 
 	Vector<int> face_array;
 	face_array.resize(part.faceCount);
@@ -168,7 +168,7 @@ bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_
 		face_array.set(index, 3);
 	}
 
-	HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::set_face_counts(HoudiniEngine::get().get_session(), node_id, 0, face_array.ptr(), 0, face_array.size()), false);
-	HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::commit_geo(HoudiniEngine::get().get_session(), node_id), false);
+	HOUDINI_CHECK_CALL_ERROR_RETURN(HoudiniApi::set_face_counts(HoudiniEngine::get().get_session(), node_id, 0, face_array.ptr(), 0, face_array.size()), false);
+	HOUDINI_CHECK_CALL_ERROR_RETURN(HoudiniApi::commit_geo(HoudiniEngine::get().get_session(), node_id), false);
 	return true;
 }

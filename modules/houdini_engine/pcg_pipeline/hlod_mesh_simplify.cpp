@@ -6,6 +6,8 @@
 #include "../houdini_engine/houdini_engine_string.h"
 #include "../houdini_engine/houdini_engine_utils.h"
 
+
+
 void HLODMeshSimplifier::hlod_mesh_simplify(const Vector<HlodInputMesh> &input_meshs) {
 
 	// Create houdini input geos
@@ -48,6 +50,6 @@ void HLODMeshSimplifier::hlod_mesh_simplify(const Vector<HlodInputMesh> &input_m
 void HLODMeshSimplifier::init() {
 	String code_path(__FILE__);
 	Vector<String> split_string = code_path.split("hlod_mesh_simplify.cpp");
-	String hda_path = split_string.get(0) + String("hda\\godot_simplify_mesh.hda");
+	String hda_path = split_string.get(0) + String("\\pcg_pipeline\\hda\\godot_simplify_mesh.hda");
 	HoudiniApi::load_asset_library_from_file(HoudiniEngine::get().get_session(), hda_path.ascii().get_data(), true, &hda_lib_id);
 }

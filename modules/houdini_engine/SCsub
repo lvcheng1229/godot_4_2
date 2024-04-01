@@ -5,6 +5,9 @@ Import('env')
 module_env = env.Clone()
 module_env.add_source_files(env.modules_sources, "*.cpp")
 module_env.add_source_files(env.modules_sources, "houdini_engine/*.cpp")
+module_env.add_source_files(env.modules_sources, "houdini_engine_editor/*.cpp")
+module_env.add_source_files(env.modules_sources, "houdini_engine_runtime/*.cpp")
+module_env.add_source_files(env.modules_sources, "pcg_pipeline/*.cpp")
 # Append CCFLAGS flags for both C and C++ code.
 module_env.Append(CCFLAGS=['-O2'])
 # If you need to, you can:
