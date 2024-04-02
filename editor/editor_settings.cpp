@@ -561,6 +561,14 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 	// Tools (denoise)
 	EDITOR_SETTING_USAGE(Variant::STRING, PROPERTY_HINT_GLOBAL_DIR, "filesystem/tools/oidn/oidn_denoise_path", "", "", PROPERTY_USAGE_DEFAULT)
 
+	//TanGram:HLODBaker:BEGIN
+	// Houdini include path
+	EDITOR_SETTING_USAGE(Variant::STRING, PROPERTY_HINT_GLOBAL_DIR, "filesystem/houdini/HoudiniDll", "", "", PROPERTY_USAGE_DEFAULT)
+
+	// Houdini hda path
+	EDITOR_SETTING_USAGE(Variant::STRING, PROPERTY_HINT_GLOBAL_DIR, "filesystem/houdini/HoudiniHda", "", "", PROPERTY_USAGE_DEFAULT)
+	//TanGram:HLODBaker:END
+
 	/* Docks */
 
 	// SceneTree

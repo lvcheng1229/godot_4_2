@@ -27,6 +27,7 @@ get_status_string_func_ptr HoudiniApi::get_status_string = nullptr;
 get_status_string_buf_length_func_ptr HoudiniApi::get_status_string_buf_length = nullptr;
 get_connection_error_length_func_ptr HoudiniApi::get_connection_error_length = nullptr;
 get_connection_error_func_ptr HoudiniApi::get_connection_error = nullptr;
+set_part_info_func_ptr HoudiniApi::set_part_info = nullptr;
 
 void valid_symbol(Error error) {
 	if (error != OK) {
@@ -61,6 +62,7 @@ void HoudiniApi::initialize_hapi(void *houdini_handle) {
 	void *get_status_string_buf_length_ptr;
 	void *get_connection_error_length_ptr;
 	void *get_connection_error_ptr;
+	void *set_part_info_ptr;
 
 	Error error;
 	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_CreateNode", create_node_ptr));
@@ -91,6 +93,7 @@ void HoudiniApi::initialize_hapi(void *houdini_handle) {
 
 	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetConnectionErrorLength", get_connection_error_length_ptr));
 	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetConnectionError", get_connection_error_ptr));
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_SetPartInfo", set_part_info_ptr));
 
 	create_node = (create_node_func_ptr)create_node_ptr;
 	create_input_node = (create_input_node_func_ptr)create_input_node_ptr;
@@ -118,4 +121,5 @@ void HoudiniApi::initialize_hapi(void *houdini_handle) {
 	get_status_string_buf_length = (get_status_string_buf_length_func_ptr)get_status_string_buf_length_ptr;
 	get_connection_error_length = (get_connection_error_length_func_ptr)get_connection_error_length_ptr;
 	get_connection_error = (get_connection_error_func_ptr)get_connection_error_ptr;
+	set_part_info = (set_part_info_func_ptr)set_part_info_ptr;
 }

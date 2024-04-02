@@ -73,11 +73,12 @@ bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_
 				houdini_mesh_data.points.push_back(v);
 				houdini_mesh_data.uv.push_back(Vector3(uvr[vidx[k]].x, uvr[vidx[k]].y, 0));
 				houdini_mesh_data.normal.push_back(normal_xform.xform(nr[vidx[k]]).normalized());
-				indices.push_back(global_index + 0);
-				indices.push_back(global_index + 1);
-				indices.push_back(global_index + 2);
-				global_index+=3;
 			}
+
+			indices.push_back(global_index + 0);
+			indices.push_back(global_index + 1);
+			indices.push_back(global_index + 2);
+			global_index += 3;
 		}
 	}
 
@@ -99,6 +100,7 @@ bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_
 	part.faceCount = num_triangles;
 	part.pointCount = num_vertices;
 	part.type = HAPI_PARTTYPE_MESH;
+	HOUDINI_CHECK_CALL_ERROR_RETURN(HoudiniApi::set_part_info(HoudiniEngine::get().get_session(), node_id, 0, &part), false);
 
 	// Create point attribute info.
 	{

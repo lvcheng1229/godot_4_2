@@ -10,6 +10,7 @@ typedef HAPI_Result (*set_attribute_float_data_func_ptr)(const HAPI_Session *ses
 typedef HAPI_Result (*set_vertex_list_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_PartId part_id, const int *vertex_list_array, int start, int length);
 typedef HAPI_Result (*set_face_counts_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_PartId part_id, const int *face_counts_array, int start, int length);
 typedef void (*partion_info_init_func_ptr)(HAPI_PartInfo *in);
+typedef HAPI_Result (*set_part_info_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_PartId part_id, const HAPI_PartInfo *part_info);
 typedef void (*attributeinfo_init_func_ptr)(HAPI_AttributeInfo *in);
 typedef HAPI_Result (*commit_geo_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id);
 typedef HAPI_Result (*load_asset_library_from_file_func_ptr)(const HAPI_Session *session, const char *file_path, HAPI_Bool allow_overwrite, HAPI_AssetLibraryId *library_id);
@@ -80,4 +81,5 @@ public:
 
 	static get_connection_error_func_ptr get_connection_error;
 	static get_connection_error_length_func_ptr get_connection_error_length;
+	static set_part_info_func_ptr set_part_info;
 };

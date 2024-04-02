@@ -39,7 +39,7 @@ void HoudiniEngineString::get_last_error_gd_string(CharString &string) {
 	}
 
 	int buffer_length;
-	HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::get_status_string_buf_length(HoudiniEngine::get().get_session(), status_type, HAPI_STATUSVERBOSITY_ALL, &buffer_length));
+	HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::get_status_string_buf_length(HoudiniEngine::get().get_session(), status_type, HAPI_STATUSVERBOSITY_ERRORS, &buffer_length));
 
 	char *buffer = new char[buffer_length];
 	HoudiniApi::get_status_string(HoudiniEngine::get().get_session(), status_type, buffer, buffer_length);
