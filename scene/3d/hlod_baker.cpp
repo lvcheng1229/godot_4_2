@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include "hlod_baker.h"
 #include "scene/resources/surface_tool.h"
+#include "editor/editor_node.h"
 
 IHLODMeshSimplifier::CreateFunc IHLODMeshSimplifier::create_hlod_baker = nullptr;
 
@@ -37,8 +38,6 @@ Ref<IHLODMeshSimplifier> IHLODMeshSimplifier::create() {
 
 
 bool HLODBaker::bake(Node *p_from_node) {
-
-	Node *rootNode = p_from_node;
 
 	Ref<IHLODMeshSimplifier> hlod_mesh_simplifier = IHLODMeshSimplifier::create();
 	Vector<HlodInputMesh> hlod_input_meshs;
@@ -66,10 +65,15 @@ bool HLODBaker::bake(Node *p_from_node) {
 		surftool->add_index(hlod_mesh_simplified.indices.get(index));
 	}
 
+
 	Ref<ArrayMesh>  array_mesh = surftool->commit();
 	MeshInstance3D *mesh_instance = memnew(MeshInstance3D);
 	mesh_instance->set_mesh(array_mesh);
-	rootNode->add_child(mesh_instance);
+	mesh_instance->set_name("hlod_generated");
+
+	Node *current_edited_scene_root = EditorNode::get_singleton()->get_edited_scene();
+	current_edited_scene_root->add_child(mesh_instance);
+	mesh_instance->set_owner(current_edited_scene_root);
 
 	return false;
 }
