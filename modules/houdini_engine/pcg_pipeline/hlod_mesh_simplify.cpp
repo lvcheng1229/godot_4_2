@@ -161,6 +161,11 @@ void HLODMeshSimplifier::get_output_mesh(int node_id, HlodSimplifiedMesh &hlod_m
 			hlod_mesh_simplified.uv.set(face_index * 3 + 1, Vector3(uv_data[index_b * uv_attribute.tupleSize + 0], uv_data[index_b * uv_attribute.tupleSize + 1], uv_data[index_b * uv_attribute.tupleSize + 2]));
 			hlod_mesh_simplified.uv.set(face_index * 3 + 2, Vector3(uv_data[index_c * uv_attribute.tupleSize + 0], uv_data[index_c * uv_attribute.tupleSize + 1], uv_data[index_c * uv_attribute.tupleSize + 2]));
 		}
+
+		delete vertex_list;
+		delete pos_data;
+		delete normal_data;
+		delete uv_data;
 	}
 	
 }
