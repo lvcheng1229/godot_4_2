@@ -32,6 +32,18 @@ typedef HAPI_Result (*get_status_string_buf_length_func_ptr)(const HAPI_Session 
 typedef HAPI_Result (*get_connection_error_func_ptr )(char *string_value, int length, HAPI_Bool clear);
 typedef HAPI_Result (*get_connection_error_length_func_ptr)(int *buffer_length);
 
+typedef HAPI_NodeInfo (*nodeinfo_create_func_ptr)();
+typedef HAPI_Result (*get_node_info_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_NodeInfo *node_info);
+
+typedef HAPI_Result (*query_node_input_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_to_query, int input_index, HAPI_NodeId *connected_node_id);
+
+typedef HAPI_Result (*get_geo_info_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_GeoInfo *geo_info);
+typedef HAPI_Result (*get_vertex_list_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_PartId part_id, int *vertex_list_array, int start, int length);
+typedef HAPI_Result (*get_attribute_float_data_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_PartId part_id, const char *name, HAPI_AttributeInfo *attr_info, int stride, float *data_array, int start, int length);
+typedef HAPI_Result (*get_part_info_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_PartId part_id, HAPI_PartInfo *part_info);
+
+typedef HAPI_Result (*get_attribute_info_func_ptr)(const HAPI_Session *session, HAPI_NodeId node_id, HAPI_PartId part_id, const char *name, HAPI_AttributeOwner owner, HAPI_AttributeInfo *attr_info);
+
 struct HoudiniApi {
 public:
 	static void initialize_hapi(void* houdini_handle);
@@ -82,4 +94,16 @@ public:
 	static get_connection_error_func_ptr get_connection_error;
 	static get_connection_error_length_func_ptr get_connection_error_length;
 	static set_part_info_func_ptr set_part_info;
+
+	static nodeinfo_create_func_ptr nodeinfo_create;
+	static get_node_info_func_ptr get_node_info;
+
+	static query_node_input_func_ptr query_node_input;
+
+	static get_geo_info_func_ptr get_geo_info;
+	static get_vertex_list_func_ptr get_vertex_list;
+	static get_attribute_float_data_func_ptr get_attribute_float_data;
+	static get_part_info_func_ptr get_part_info;
+
+	static get_attribute_info_func_ptr get_attribute_info;
 };

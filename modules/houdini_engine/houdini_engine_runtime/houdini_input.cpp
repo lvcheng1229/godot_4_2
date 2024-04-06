@@ -3,8 +3,7 @@
 HoudiniInput::HoudiniInput() :
 		type(HoudiniInputType::HTP_NONE),
 		input_node_id (-1),
-		hda_node_id(-1),
-		sop_input_index(-1) {
+		hda_node_id(-1) {
 
 }
 

@@ -4,5 +4,5 @@
 
 struct GoDotMeshTranslator {
 public:
-	static bool hapi_create_input_node_for_mesh(const Ref<Mesh> input_mesh, const Transform3D transform, HoudiniInputNode &houdini_node);
+	static bool hapi_create_input_node_for_mesh(const Ref<Mesh> input_mesh, const Transform3D transform, Vector<HoudiniInputNode> *houdini_nodes, int index, const int parent_node_id);
 };

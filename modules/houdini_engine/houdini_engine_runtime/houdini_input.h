@@ -17,8 +17,8 @@ public:
 	inline int get_hda_node_id() const { return hda_node_id; }
 	inline void set_hda_node_id(int new_node_id) { hda_node_id = new_node_id; }
 
-	inline int get_sop_input_index() const { return sop_input_index; };
-	inline void set_sop_input_index(int new_sop_input_index)  { sop_input_index = new_sop_input_index; }
+	inline int get_parent_node_id() const { return parent_node_id; }
+	inline void set_parent_node_id(int new_parent_node_id) { parent_node_id = new_parent_node_id; }
 
 private:
 
@@ -32,5 +32,5 @@ private:
 	// houdini asset node id
 	int hda_node_id;
 
-	int sop_input_index;
+	int parent_node_id;
 };

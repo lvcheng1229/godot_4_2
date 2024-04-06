@@ -4,11 +4,16 @@
 #include "houdini_engine_utils.h"
 #include "../houdini_engine.h"
 
-bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_mesh, const Transform3D transform, HoudiniInputNode &houdini_node) {
+__pragma(optimize("", off))
+
+bool GoDotMeshTranslator::hapi_create_input_node_for_mesh(const Ref<Mesh> input_mesh, const Transform3D transform, Vector<HoudiniInputNode> *houdini_nodes, int index, const int parent_node_id) {
 	HAPI_NodeId node_id;
 
-	HOUDINI_CHECK_ERROR_RETURN(HoudiniEngineUtils::create_input_node(node_id), false);
-	houdini_node.set_input_node_id(node_id);
+	HoudiniApi::create_node(HoudiniEngine::get().get_session(), parent_node_id, "null", nullptr, true, &node_id);
+
+	HoudiniInputNode input_node_set;
+	input_node_set.set_input_node_id(node_id);
+	houdini_nodes->set(index, input_node_set);
 
 	// lightmapper.h struct MeshData
 	struct HoudiniMeshData {

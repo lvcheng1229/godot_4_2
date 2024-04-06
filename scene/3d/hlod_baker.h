@@ -34,6 +34,15 @@ struct HlodInputMesh {
 	Ref<Mesh> mesh;
 };
 
+struct HlodSimplifiedMesh
+{
+	Vector<Vector3> points;
+	Vector<Vector3> uv; // uv.z == 0
+	Vector<Vector3> normal;
+
+	Vector<int> indices;
+};
+
 class IHLODMeshSimplifier : public RefCounted {
 	GDCLASS(IHLODMeshSimplifier, RefCounted)
 public:
@@ -42,7 +51,7 @@ public:
 	static CreateFunc create_hlod_baker;
 
 	static Ref<IHLODMeshSimplifier> create();
-	virtual void hlod_mesh_simplify(const Vector<HlodInputMesh> &input_meshs) = 0;
+	virtual void hlod_mesh_simplify(const Vector<HlodInputMesh> &input_meshs, HlodSimplifiedMesh& hlod_mesh_simplified) = 0;
 };
 
 class HLODBaker : public VisualInstance3D {

@@ -40,7 +40,9 @@ bool HLODBaker::bake(Node *p_from_node) {
 	Ref<IHLODMeshSimplifier> hlod_mesh_simplifier = IHLODMeshSimplifier::create();
 	Vector<HlodInputMesh> hlod_input_meshs;
 	find_meshs(p_from_node, hlod_input_meshs);
-	hlod_mesh_simplifier->hlod_mesh_simplify(hlod_input_meshs);
+
+	HlodSimplifiedMesh hlod_mesh_simplified;
+	hlod_mesh_simplifier->hlod_mesh_simplify(hlod_input_meshs, hlod_mesh_simplified);
 
 
 	return false;

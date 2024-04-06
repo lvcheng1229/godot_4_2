@@ -28,6 +28,15 @@ get_status_string_buf_length_func_ptr HoudiniApi::get_status_string_buf_length =
 get_connection_error_length_func_ptr HoudiniApi::get_connection_error_length = nullptr;
 get_connection_error_func_ptr HoudiniApi::get_connection_error = nullptr;
 set_part_info_func_ptr HoudiniApi::set_part_info = nullptr;
+nodeinfo_create_func_ptr HoudiniApi::nodeinfo_create = nullptr;
+get_node_info_func_ptr HoudiniApi::get_node_info = nullptr;
+query_node_input_func_ptr HoudiniApi::query_node_input = nullptr;
+
+get_vertex_list_func_ptr HoudiniApi::get_vertex_list;
+get_attribute_float_data_func_ptr HoudiniApi::get_attribute_float_data;
+get_part_info_func_ptr HoudiniApi::get_part_info;
+get_geo_info_func_ptr HoudiniApi::get_geo_info;
+get_attribute_info_func_ptr HoudiniApi::get_attribute_info;
 
 void valid_symbol(Error error) {
 	if (error != OK) {
@@ -63,6 +72,15 @@ void HoudiniApi::initialize_hapi(void *houdini_handle) {
 	void *get_connection_error_length_ptr;
 	void *get_connection_error_ptr;
 	void *set_part_info_ptr;
+	void *nodeinfo_create_ptr;
+	void *get_node_info_ptr;
+	void *query_node_input_ptr;
+
+	void* get_vertex_list_ptr;
+	void *get_attribute_float_data_ptr;
+	void *get_part_info_ptr;
+	void *get_geo_info_ptr;
+	void *get_attribute_info_ptr;
 
 	Error error;
 	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_CreateNode", create_node_ptr));
@@ -95,6 +113,16 @@ void HoudiniApi::initialize_hapi(void *houdini_handle) {
 	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetConnectionError", get_connection_error_ptr));
 	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_SetPartInfo", set_part_info_ptr));
 
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_NodeInfo_Create", nodeinfo_create_ptr));
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetNodeInfo", get_node_info_ptr));
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_QueryNodeInput", query_node_input_ptr));
+
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetVertexList", get_vertex_list_ptr));
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetAttributeFloatData", get_attribute_float_data_ptr));
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetPartInfo", get_part_info_ptr));
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetGeoInfo", get_geo_info_ptr));
+	valid_symbol(OS::get_singleton()->get_dynamic_library_symbol_handle(houdini_handle, "HAPI_GetAttributeInfo", get_attribute_info_ptr));
+
 	create_node = (create_node_func_ptr)create_node_ptr;
 	create_input_node = (create_input_node_func_ptr)create_input_node_ptr;
 	create_inprocess_session = (create_inprocess_session_func_ptr)create_inprocess_session_ptr;
@@ -122,4 +150,13 @@ void HoudiniApi::initialize_hapi(void *houdini_handle) {
 	get_connection_error_length = (get_connection_error_length_func_ptr)get_connection_error_length_ptr;
 	get_connection_error = (get_connection_error_func_ptr)get_connection_error_ptr;
 	set_part_info = (set_part_info_func_ptr)set_part_info_ptr;
+	nodeinfo_create = (nodeinfo_create_func_ptr)nodeinfo_create_ptr;
+	get_node_info = (get_node_info_func_ptr)get_node_info_ptr;
+	query_node_input = (query_node_input_func_ptr)query_node_input_ptr;
+
+	get_vertex_list = (get_vertex_list_func_ptr)get_vertex_list_ptr;
+	get_attribute_float_data = (get_attribute_float_data_func_ptr)get_attribute_float_data_ptr;
+	get_part_info = (get_part_info_func_ptr)get_part_info_ptr;
+	get_geo_info = (get_geo_info_func_ptr)get_geo_info_ptr;
+	get_attribute_info = (get_attribute_info_func_ptr)get_attribute_info_ptr;
 }

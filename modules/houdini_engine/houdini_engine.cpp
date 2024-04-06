@@ -14,19 +14,13 @@ const HAPI_Session *HoudiniEngine::get_session() {
 	return &session;
 }
 
-bool HoudiniEngine::start_session() {
-	HAPI_CookOptions options;
-
-	printf("debug 0");
-	HoudiniApi::create_inprocess_session(&session);
-
-	printf("debug 0");
-	HoudiniApi::initlialize(&session, &options, false, -1, "", "", "", "", "");
-	return true;
-}
-
 HoudiniEngine::HoudiniEngine() {
 	void *hapi_library_handle = HoudiniEngineUtils::load_lib_api();
+	if (!hapi_library_handle)
+	{
+		return;
+	}
+
 	HoudiniApi::initialize_hapi(hapi_library_handle);
 
 	HAPI_CookOptions options;
@@ -51,10 +45,6 @@ HoudiniEngine::HoudiniEngine() {
 		WARN_PRINT(error_string);
 	}
 
-
-	//HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::start_thrift_named_pipe_server(&serverOptions, "hapi", nullptr, nullptr),);
-	//HOUDINI_CHECK_ERROR_RETURN(HoudiniApi::create_thrift_named_pipe_session(&session, "hapi"), );
-	//HoudiniApi::create_inprocess_session(&session);
 	HAPI_Result Result = HoudiniApi::initlialize(get_session(), &options, false, -1, "", "", "", "", "");
 	if (Result == HAPI_RESULT_ALREADY_INITIALIZED) {
 		WARN_PRINT("Successfully intialized the Houdini Engine module - HAPI was already initialzed.");
