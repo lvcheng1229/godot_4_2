@@ -54,6 +54,18 @@ public:
 	virtual void hlod_mesh_simplify(const Vector<HlodInputMesh> &input_meshs, HlodSimplifiedMesh& hlod_mesh_simplified) = 0;
 };
 
+class IHLODTextureGenerator : public RefCounted {
+	GDCLASS(IHLODTextureGenerator, RefCounted)
+public:
+	typedef IHLODTextureGenerator *(*CreateFunc)();
+
+	static CreateFunc create_hlod_tex_generator;
+
+	static Ref<IHLODTextureGenerator> create();
+	virtual void hlod_mesh_texture_generate(const Vector<HlodInputMesh> &input_meshs,const HlodSimplifiedMesh &hlod_mesh_simplified) = 0;
+};
+
+
 class HLODBaker : public VisualInstance3D {
 	GDCLASS(HLODBaker, VisualInstance3D);
 

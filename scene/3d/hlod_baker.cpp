@@ -27,12 +27,20 @@ SOFTWARE.
 #include "editor/editor_node.h"
 
 IHLODMeshSimplifier::CreateFunc IHLODMeshSimplifier::create_hlod_baker = nullptr;
+IHLODTextureGenerator::CreateFunc IHLODTextureGenerator::create_hlod_tex_generator = nullptr;
 
 Ref<IHLODMeshSimplifier> IHLODMeshSimplifier::create() {
 	if (create_hlod_baker) {
 		return Ref<IHLODMeshSimplifier>(create_hlod_baker());
 	}
 	return Ref<IHLODMeshSimplifier>();
+}
+
+Ref<IHLODTextureGenerator> IHLODTextureGenerator::create() {
+	if (create_hlod_tex_generator) {
+		return Ref<IHLODTextureGenerator>(create_hlod_tex_generator());
+	}
+	return Ref<IHLODTextureGenerator>();
 }
 
 
@@ -45,6 +53,9 @@ bool HLODBaker::bake(Node *p_from_node) {
 
 	HlodSimplifiedMesh hlod_mesh_simplified;
 	hlod_mesh_simplifier->hlod_mesh_simplify(hlod_input_meshs, hlod_mesh_simplified);
+
+	Ref<IHLODTextureGenerator> hlod_tex_generator = IHLODTextureGenerator::create();
+	hlod_tex_generator->hlod_mesh_texture_generate(hlod_input_meshs, hlod_mesh_simplified);
 
 	Ref<SurfaceTool> surftool;
 	surftool.instantiate();

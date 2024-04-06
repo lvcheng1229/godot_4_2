@@ -3,11 +3,18 @@
 #include "houdini_engine/houdini_api.h"
 #include "houdini_engine/houdini_common.h"
 #include "pcg_pipeline/hlod_mesh_simplify.h"
+#include "pcg_pipeline/hlod_texture_generation.h"
 
 static IHLODMeshSimplifier *create_hloa_simplifier() {
 	HLODMeshSimplifier *mesh_simplifier = memnew(HLODMeshSimplifier);
 	mesh_simplifier->init();
 	return mesh_simplifier;
+}
+
+static IHLODTextureGenerator *create_hloa_tex_generator() {
+	HLODTexGenerator *mesh_tex_generator = memnew(HLODTexGenerator);
+	mesh_tex_generator->init();
+	return mesh_tex_generator;
 }
 
 const HAPI_Session *HoudiniEngine::get_session() {
@@ -53,4 +60,5 @@ HoudiniEngine::HoudiniEngine() {
 	}
 
 	IHLODMeshSimplifier::create_hlod_baker = create_hloa_simplifier;
+	IHLODTextureGenerator::create_hlod_tex_generator = create_hloa_tex_generator;
 }
