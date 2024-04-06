@@ -386,6 +386,11 @@ Files extracted from upstream source:
   - Except `main.cc`, `harfbuzz*.cc`, `failing-alloc.c`, `test*.cc`, `hb-wasm*.*`,
     and the `wasm` folder
 
+## hwrtl
+
+- Upstream: https://github.com/lvcheng1229/HWRTL
+- Version: 0.0.0 (ecd656b8b2ea9997d34afec54b2d90db8df10132, 2023)
+- License: MIT
 
 ## icu4c
 
