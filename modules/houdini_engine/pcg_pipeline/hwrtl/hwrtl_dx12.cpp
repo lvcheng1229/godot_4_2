@@ -51,7 +51,8 @@ SOFTWARE.
 
 #define ENABLE_THROW_FAILED_RESULT 1
 #define ENABLE_DX12_DEBUG_LAYER 1
-#define ENABLE_PIX_FRAME_CAPTURE 0
+#define ENABLE_PIX_FRAME_CAPTURE 1
+#define PIX_CAPUTRE_LOAD_FROM_DLL 1
 
 //dx12 headers
 #include <d3d12.h>
@@ -65,7 +66,9 @@ SOFTWARE.
 #include <strsafe.h>
 #include <d3dcompiler.h>
 #if ENABLE_PIX_FRAME_CAPTURE
+#if !PIX_CAPUTRE_LOAD_FROM_DLL
 #include "pix3.h"
+#endif
 #endif
 
 // other headers
@@ -111,6 +114,76 @@ static constexpr uint32_t maxRootConstant = 16;
 #define BINDLESS_BYTE_ADDRESS_BUFFER_SPACE 1 /*space2*/
 #define BINDLESS_TEXTURE_SPACE 2 /*space3*/
 #define ROOT_CONSTANT_SPACE 5 /*space2*/
+
+#if ENABLE_DX12_DEBUG_LAYER
+__pragma(optimize("", off))
+#endif
+
+#if ENABLE_PIX_FRAME_CAPTURE && PIX_CAPUTRE_LOAD_FROM_DLL
+
+#define PIX_CAPTURE_TIMING (1 << 0)
+#define PIX_CAPTURE_GPU (1 << 1)
+#define PIX_CAPTURE_FUNCTION_SUMMARY (1 << 2)
+#define PIX_CAPTURE_FUNCTION_DETAILS (1 << 3)
+#define PIX_CAPTURE_CALLGRAPH (1 << 4)
+#define PIX_CAPTURE_INSTRUCTION_TRACE (1 << 5)
+#define PIX_CAPTURE_SYSTEM_MONITOR_COUNTERS (1 << 6)
+#define PIX_CAPTURE_VIDEO (1 << 7)
+#define PIX_CAPTURE_AUDIO (1 << 8)
+#define PIX_CAPTURE_GPU_TRACE (1 << 9)
+#define PIX_CAPTURE_RESERVED (1 << 15)
+
+		union PIXCaptureParameters {
+	enum PIXCaptureStorage {
+		Memory = 0,
+		MemoryCircular = 1, // Xbox only
+		FileCircular = 2, // PC only
+	};
+
+	struct GpuCaptureParameters {
+		PCWSTR FileName;
+	} GpuCaptureParameters;
+
+	struct TimingCaptureParameters {
+		PCWSTR FileName;
+		UINT32 MaximumToolingMemorySizeMb;
+		PIXCaptureStorage CaptureStorage;
+
+		BOOL CaptureGpuTiming;
+
+		BOOL CaptureCallstacks;
+		BOOL CaptureCpuSamples;
+		UINT32 CpuSamplesPerSecond;
+
+		BOOL CaptureFileIO;
+
+		BOOL CaptureVirtualAllocEvents;
+		BOOL CaptureHeapAllocEvents;
+		BOOL CaptureXMemEvents; // Xbox only
+		BOOL CapturePixMemEvents; // Xbox only
+	} TimingCaptureParameters;
+
+	struct GpuTraceParameters // Xbox Series and newer only
+	{
+		PWSTR FileName;
+		UINT32 MaximumToolingMemorySizeMb;
+
+		BOOL CaptureGpuOccupancy;
+
+	} GpuTraceParameters;
+};
+
+typedef PIXCaptureParameters *PPIXCaptureParameters;
+
+typedef HRESULT(__stdcall *PIXBeginCapture2_API)(DWORD captureFlags, const PPIXCaptureParameters captureParameters);
+typedef HRESULT(__stdcall *PIXEndCapture_API)(BOOL discard);
+
+static PIXBeginCapture2_API PIXBeginCapture2 = nullptr;
+static PIXEndCapture_API PIXEndCapture = nullptr;
+
+inline HRESULT PIXBeginCapture(DWORD captureFlags, const PPIXCaptureParameters captureParameters) { return PIXBeginCapture2(captureFlags, captureParameters); }
+
+#endif
 
 namespace hwrtl
 {
@@ -334,6 +407,7 @@ namespace hwrtl
         HANDLE m_FenceEvent;
         uint64_t m_nFenceValue = 0;;
 
+		SDeviceInitConfig m_deviceInifConfig;
 #if ENABLE_PIX_FRAME_CAPTURE
         HMODULE m_pixModule;
 #endif
@@ -469,9 +543,10 @@ namespace hwrtl
         bool m_bViewportDirty;
     };
 
-    void hwrtl::Init()
+    void hwrtl::Init(const SDeviceInitConfig deviceInitConfig)
     {
         pDXDevice = new CDXDevice();
+		pDXDevice->m_deviceInifConfig = deviceInitConfig;
         pDXDevice->Init();
     }
 
@@ -1400,7 +1475,13 @@ namespace hwrtl
     void hwrtl::CDXDevice::Init()
     {
 #if ENABLE_PIX_FRAME_CAPTURE
-        m_pixModule = PIXLoadLatestWinPixGpuCapturerLibrary();
+		#if PIX_CAPUTRE_LOAD_FROM_DLL
+		m_pixModule = LoadLibrary(m_deviceInifConfig.m_pixCaptureDllPath.c_str());
+		PIXBeginCapture2 = (PIXBeginCapture2_API)GetProcAddress(m_pixModule, "PIXBeginCapture2");
+		PIXEndCapture = (PIXEndCapture_API)GetProcAddress(m_pixModule, "PIXEndCapture");
+		#else
+		m_pixModule = PIXLoadLatestWinPixGpuCapturerLibrary();
+		#endif
 #endif
 
         IDXGIFactory4Ptr pDxgiFactory;
@@ -1427,10 +1508,17 @@ namespace hwrtl
         ThrowIfFailed(DxcCreateInstance(CLSID_DxcLibrary, IID_PPV_ARGS(&m_pLibrary)));
 
 #if ENABLE_PIX_FRAME_CAPTURE
-        std::wstring pixPath = WstringConverter().from_bytes(__FILE__).substr(0, WstringConverter().from_bytes(__FILE__).find(L"hwrtl_dx12.cpp")) + L"HWRT\\pix.wpix";
-        PIXCaptureParameters pixCaptureParameters;
-        pixCaptureParameters.GpuCaptureParameters.FileName = pixPath.c_str();
-        PIXBeginCapture(PIX_CAPTURE_GPU, &pixCaptureParameters);
+		#if PIX_CAPUTRE_LOAD_FROM_DLL
+		std::wstring pixPath = WstringConverter().from_bytes(m_deviceInifConfig.m_pixCaptureSavePath);
+		PIXCaptureParameters pixCaptureParameters;
+		pixCaptureParameters.GpuCaptureParameters.FileName = pixPath.c_str();
+		PIXBeginCapture(PIX_CAPTURE_GPU, &pixCaptureParameters);
+		#else
+		std::wstring pixPath = WstringConverter().from_bytes(__FILE__).substr(0, WstringConverter().from_bytes(__FILE__).find(L"hwrtl_dx12.cpp")) + L"HWRT\\pix.wpix";
+		PIXCaptureParameters pixCaptureParameters;
+		pixCaptureParameters.GpuCaptureParameters.FileName = pixPath.c_str();
+		PIXBeginCapture(PIX_CAPTURE_GPU, &pixCaptureParameters);
+		#endif
 #endif
     }
 

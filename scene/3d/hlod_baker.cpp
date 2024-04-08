@@ -54,32 +54,13 @@ bool HLODBaker::bake(Node *p_from_node) {
 	HlodSimplifiedMesh hlod_mesh_simplified;
 	hlod_mesh_simplifier->hlod_mesh_simplify(hlod_input_meshs, hlod_mesh_simplified);
 
+	Ref<ArrayMesh> out_mesh;
+
 	Ref<IHLODTextureGenerator> hlod_tex_generator = IHLODTextureGenerator::create();
-	hlod_tex_generator->hlod_mesh_texture_generate(hlod_input_meshs, hlod_mesh_simplified);
+	hlod_tex_generator->hlod_mesh_texture_generate(hlod_input_meshs, hlod_mesh_simplified, out_mesh);
 
-	Ref<SurfaceTool> surftool;
-	surftool.instantiate();
-	surftool->begin(Mesh::PRIMITIVE_TRIANGLES);
-
-	for (int index = 0; index < hlod_mesh_simplified.points.size(); index++)
-	{
-		surftool->set_normal(hlod_mesh_simplified.normal.get(index));
-
-		Vector2 uv = Vector2(hlod_mesh_simplified.uv.get(index).x, hlod_mesh_simplified.uv.get(index).y);
-		surftool->set_uv(uv);
-
-		surftool->add_vertex(hlod_mesh_simplified.points.get(index));
-	}
-
-	for (int index = 0; index < hlod_mesh_simplified.indices.size(); index++)
-	{
-		surftool->add_index(hlod_mesh_simplified.indices.get(index));
-	}
-
-
-	Ref<ArrayMesh>  array_mesh = surftool->commit();
 	MeshInstance3D *mesh_instance = memnew(MeshInstance3D);
-	mesh_instance->set_mesh(array_mesh);
+	mesh_instance->set_mesh(out_mesh);
 	mesh_instance->set_name("hlod_generated");
 
 	Node *current_edited_scene_root = EditorNode::get_singleton()->get_edited_scene();

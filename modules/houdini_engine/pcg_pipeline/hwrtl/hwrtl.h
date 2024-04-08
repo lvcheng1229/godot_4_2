@@ -279,7 +279,7 @@ namespace hwrtl
 		ETexFormat m_eTexFormat;
 		uint32_t m_width;
 		uint32_t m_height;
-		uint8_t* m_srcData;
+		const uint8_t* m_srcData;
 	};
 
 	struct SShaderResources
@@ -473,7 +473,12 @@ namespace hwrtl
 		virtual void DrawInstanced(uint32_t vertexCountPerInstance, uint32_t InstanceCount, uint32_t StartVertexLocation, uint32_t StartInstanceLocation) = 0;
 	};
 
-	void Init();
+	struct SDeviceInitConfig {
+		std::string m_pixCaptureDllPath;
+		std::string m_pixCaptureSavePath;
+	};
+
+	void Init(const SDeviceInitConfig deviceInitConfig = SDeviceInitConfig());
 	void Shutdown();
 
 	std::shared_ptr <CDeviceCommand> CreateDeviceCommand();

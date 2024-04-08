@@ -202,7 +202,6 @@ void CreateAndAddScene(SHLODBakerMeshDesc& bakeMeshDescs, std::vector<SHLODHighP
         bakeMeshDescs.m_pPositionData = boxBakeGeoPositions.data();
         bakeMeshDescs.m_pUVData = boxBakeGeoUVs.data();
         bakeMeshDescs.m_nVertexCount = boxVertexCount;
-        bakeMeshDescs.m_bakedTextureSize = Vec2i(boxTexSizeX, boxTexSizeY);
         bakeMeshDescs.m_meshInstanceInfo = SMeshInstanceInfo();
         bakeMeshDescs.m_meshInstanceInfo.m_instanceFlag = EInstanceFlag::CULL_DISABLE;
     }
@@ -292,7 +291,8 @@ int main()
         SHLODConfig hlodConfig;
         hlodConfig.m_nHLODTextureSize = Vec2i(1024,1024);
 
-        InitHLODTextureBaker(hlodConfig);
+		SDeviceInitConfig deviceInitConfig;
+		InitHLODTextureBaker(hlodConfig, deviceInitConfig);
         SHLODBakerMeshDesc bakeMeshDescs; 
         std::vector<SHLODHighPolyMeshDesc> highPolyMeshs;
         CreateAndAddScene(bakeMeshDescs, highPolyMeshs);

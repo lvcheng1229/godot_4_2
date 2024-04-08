@@ -9,24 +9,25 @@ module_env.add_source_files(module_obj, "houdini_engine/*.cpp")
 module_env.add_source_files(module_obj, "houdini_engine_editor/*.cpp")
 module_env.add_source_files(module_obj, "houdini_engine_runtime/*.cpp")
 module_env.add_source_files(module_obj, "pcg_pipeline/*.cpp")
+module_env.add_source_files(module_obj, "pcg_pipeline/hwrtl/*.cpp")
 
 # Thirdparty source files
-thirdparty_dir = "#thirdparty/hwrtl/"
-thirdparty_sources = [
-    "hwrtl_dx12.cpp",
-    "hwrtl_lodtex.cpp",
-]
-
-thirdparty_sources = [thirdparty_dir + file for file in thirdparty_sources]
-
-thirdparty_obj = []
-env_thirdparty = module_env.Clone()
-env_thirdparty.disable_warnings()
-env_thirdparty.Prepend(CPPPATH=[thirdparty_dir])
-env_thirdparty.add_source_files(thirdparty_obj, thirdparty_sources)
-
-# Add Source files
-module_env.modules_sources += thirdparty_obj
+# thirdparty_dir = "#thirdparty/hwrtl/"
+# thirdparty_sources = [
+#     "hwrtl_dx12.cpp",
+#     "hwrtl_lodtex.cpp",
+# ]
+# 
+# thirdparty_sources = [thirdparty_dir + file for file in thirdparty_sources]
+# 
+# thirdparty_obj = []
+# env_thirdparty = module_env.Clone()
+# env_thirdparty.disable_warnings()
+# env_thirdparty.Prepend(CPPPATH=[thirdparty_dir])
+# env_thirdparty.add_source_files(thirdparty_obj, thirdparty_sources)
+# 
+# # Add Source files
+# module_env.modules_sources += thirdparty_obj
 module_env.modules_sources += module_obj
 
 # Append CCFLAGS flags for both C and C++ code.
@@ -37,4 +38,4 @@ module_env.Append(CCFLAGS=['-O2'])
 # - Append CXXFLAGS for C++ code only.
 
 # Needed to force rebuilding the module files when the thirdparty library is updated.
-module_env.Depends(module_obj,thirdparty_obj)
+# module_env.Depends(module_obj,thirdparty_obj)

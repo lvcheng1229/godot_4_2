@@ -59,6 +59,7 @@ struct SHLODClosestHitPayload
     float2 uv;
     uint baseColorIndex;
     uint normalIndex;
+    uint metallicIndex;
     float m_vHiTt;
 };
 
@@ -73,6 +74,7 @@ struct SMeshInstanceGpuData
 
     uint highPolyBaseColorIndex;
     uint highPolyNormalIndex;
+    uint highPolyMetallicIndex;
 };
 
 
@@ -86,6 +88,7 @@ Texture2D<float4> highPolyBindlessTexture[] : BINDLESS_TEXTURE_REGISTER;
 
 RWTexture2D<float4> outputBaseColor : register(u0);
 RWTexture2D<float4> outputNormal : register(u1);
+RWTexture2D<float4> outputMetallic : register(u2);
 
 [shader("raygeneration")]
 void HLODRayTracingRayGen()
@@ -119,6 +122,7 @@ void HLODRayTracingRayGen()
     float2 minHitUV = hlodClosestFrontPayload.uv;
     uint minHitBaseColorIndex = hlodClosestFrontPayload.baseColorIndex;
     uint minHitNormalIndex = hlodClosestFrontPayload.normalIndex;
+    uint minMetallicIndex = hlodClosestFrontPayload.metallicIndex;
     float minHitT = hlodClosestFrontPayload.m_vHiTt;
 
     if(hlodClosestBackPayload.m_vHiTt < hlodClosestFrontPayload.m_vHiTt)
@@ -126,13 +130,15 @@ void HLODRayTracingRayGen()
         minHitUV = hlodClosestBackPayload.uv;
         minHitBaseColorIndex = hlodClosestBackPayload.baseColorIndex;
         minHitNormalIndex = hlodClosestBackPayload.normalIndex;
+        minMetallicIndex = hlodClosestBackPayload.metallicIndex;
         minHitT = hlodClosestBackPayload.m_vHiTt;
     }
 
     if(RT_MAX_HIT_T != minHitT)
     {
         outputBaseColor[rayIndex].rgba = highPolyBindlessTexture[minHitBaseColorIndex].SampleLevel(gSamPointWarp, minHitUV , 0.0).xyzw;
-        outputNormal[rayIndex].rgba = highPolyBindlessTexture[minHitNormalIndex].SampleLevel(gSamPointWarp, minHitUV , 0.0).xyzw;
+		outputNormal[rayIndex].rgba = highPolyBindlessTexture[minHitNormalIndex].SampleLevel(gSamPointWarp, minHitUV, 0.0).xyzw;
+		outputMetallic[rayIndex].rgba = highPolyBindlessTexture[minMetallicIndex].SampleLevel(gSamPointWarp, minHitUV, 0.0).xyzw;
     }
     else
     {
@@ -154,6 +160,7 @@ void HLODClosestHitMain(inout SHLODClosestHitPayload payload, in SRayTracingInte
     const uint uvBufferIndex = meshInstanceGpuData.uvBufferIndex;
     const uint highPolyBaseColorIndex = meshInstanceGpuData.highPolyBaseColorIndex;
     const uint highPolyNormalIndex = meshInstanceGpuData.highPolyNormalIndex;
+    const uint highPolyMetallicIndex = meshInstanceGpuData.highPolyMetallicIndex;
 
     uint primitiveIndex = PrimitiveIndex();
     uint baseIndex = primitiveIndex * 3;
@@ -181,6 +188,7 @@ void HLODClosestHitMain(inout SHLODClosestHitPayload payload, in SRayTracingInte
     payload.uv = uv;
     payload.baseColorIndex = highPolyBaseColorIndex;
     payload.normalIndex = highPolyNormalIndex;
+    payload.metallicIndex = highPolyMetallicIndex;
     payload.m_vHiTt = RayTCurrent();;
 }
 

@@ -62,7 +62,7 @@ public:
 	static CreateFunc create_hlod_tex_generator;
 
 	static Ref<IHLODTextureGenerator> create();
-	virtual void hlod_mesh_texture_generate(const Vector<HlodInputMesh> &input_meshs,const HlodSimplifiedMesh &hlod_mesh_simplified) = 0;
+	virtual void hlod_mesh_texture_generate(const Vector<HlodInputMesh> &input_meshs, const HlodSimplifiedMesh &hlod_mesh_simplified, Ref<ArrayMesh> &out_mesh) = 0;
 };
 
 
