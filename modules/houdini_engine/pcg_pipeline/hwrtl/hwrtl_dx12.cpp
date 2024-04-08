@@ -51,7 +51,7 @@ SOFTWARE.
 
 #define ENABLE_THROW_FAILED_RESULT 1
 #define ENABLE_DX12_DEBUG_LAYER 1
-#define ENABLE_PIX_FRAME_CAPTURE 1
+#define ENABLE_PIX_FRAME_CAPTURE 0
 #define PIX_CAPUTRE_LOAD_FROM_DLL 1
 
 //dx12 headers
@@ -936,7 +936,7 @@ namespace hwrtl
         barrierAfter.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
         barrierAfter.Transition.pResource = defaultTexture;
         barrierAfter.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-        barrierAfter.Transition.StateAfter = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+		barrierAfter.Transition.StateAfter = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
         barrierAfter.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
         pCmdList->ResourceBarrier(1, &barrierAfter);
 
@@ -1983,7 +1983,7 @@ namespace hwrtl
         {
             pDxResouce->m_pResource = CreateDefaultTexture(texCreateDesc.m_srcData, resDesc, texCreateDesc.m_width, texCreateDesc.m_height,
                 Dx12GetTexturePiexlSize(texCreateDesc.m_eTexFormat), pDXDevice->m_tempBuffers.AllocResource());
-            pDxResouce->m_resourceState = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+			pDxResouce->m_resourceState = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
         }
         else
         {

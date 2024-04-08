@@ -13,6 +13,10 @@ void HLODTexGenerator::init() {
 static std::shared_ptr<hwrtl::CTexture2D> create_high_poly_input_texture(Ref<Texture2D> tex_ref) {
 	Ref<Image> img_ref = tex_ref->get_image();
 	Ref<Image> new_img = img_ref->get_image_from_mipmap(0);
+	if (new_img->get_format() > Image::Format::FORMAT_RGBE9995 || new_img->get_format() > Image::Format::FORMAT_RGBE9995)
+	{
+		new_img->decompress();
+	}
 	new_img->convert(Image::Format::FORMAT_RGBA8);
 	new_img->get_data();
 
@@ -38,6 +42,8 @@ static std::shared_ptr<hwrtl::CTexture2D> find_or_create_high_input_texture(Ref<
 }
 
 void HLODTexGenerator::hlod_mesh_texture_generate(const Vector<HlodInputMesh> &input_meshs, const HlodSimplifiedMesh &hlod_mesh_simplified, Ref<ArrayMesh> &out_mesh) {
+	RS::get_singleton()->get_rendering_device()->submit();
+
 	String houdini_module_path = EDITOR_GET("filesystem/houdini/HoudiniModulePath");
 
 	String shader_path = houdini_module_path + "/hwrtl/";

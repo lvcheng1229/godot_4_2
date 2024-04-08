@@ -145,7 +145,7 @@ namespace hlod
 		SRasterizationPSOCreateDesc rsPsoCreateDesc = { shaderPath, rsShaders, rasterizationResources, vertexLayouts, rtFormats, ETexFormat::FT_None };
 		pHLODTextureBaker->m_pHLODGBufferPSO = CHLODTextureBaker::GetDeviceCommand()->CreateRSPipelineState(rsPsoCreateDesc);
 
-		STextureCreateDesc texCreateDesc{ ETexUsage::USAGE_SRV | ETexUsage::USAGE_RTV,ETexFormat::FT_RGBA32_FLOAT,pHLODTextureBaker->m_hlodConfig.m_nHLODTextureSize.x,pHLODTextureBaker->m_hlodConfig.m_nHLODTextureSize.y };
+		STextureCreateDesc texCreateDesc{ ETexUsage::USAGE_SRV | ETexUsage::USAGE_RTV, ETexFormat::FT_RGBA32_FLOAT, pHLODTextureBaker->m_hlodConfig.m_nHLODTextureSize.x, pHLODTextureBaker->m_hlodConfig.m_nHLODTextureSize.y };
 		pHLODTextureBaker->m_pPosTexture = CHLODTextureBaker::GetDeviceCommand()->CreateTexture2D(texCreateDesc);
 		pHLODTextureBaker->m_pNormalTexture = CHLODTextureBaker::GetDeviceCommand()->CreateTexture2D(texCreateDesc);
 	}
@@ -163,7 +163,7 @@ namespace hlod
 		rtShaders.push_back(SShader{ ERayShaderType::RAY_CHS,L"HLODClosestHitMain" });
 		rtShaders.push_back(SShader{ ERayShaderType::RAY_MIH,L"HLODRayMiassMain" });
 
-		SRayTracingPSOCreateDesc rtPsoCreateDesc = { shaderPath, rtShaders, 1, SShaderResources{ 4,2,0,0,0,true,true} ,nullptr,0 };
+		SRayTracingPSOCreateDesc rtPsoCreateDesc = { shaderPath, rtShaders, 1, SShaderResources{ 4,3,0,0,0,true,true} ,nullptr,0 };
 		pHLODTextureBaker->m_pRayTracingPSO = CHLODTextureBaker::GetDeviceCommand()->CreateRTPipelineStateAndShaderTable(rtPsoCreateDesc);
 	}
 

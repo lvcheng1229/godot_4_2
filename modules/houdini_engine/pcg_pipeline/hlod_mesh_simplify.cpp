@@ -58,7 +58,7 @@ void HLODMeshSimplifier::hlod_mesh_simplify(const Vector<HlodInputMesh> &input_m
 
 void HLODMeshSimplifier::init() {
 	String hda_path = EDITOR_GET("filesystem/houdini/HoudiniModulePath");
-	hda_path += "/hda/godot_simplify_mesh3.hda";
+	hda_path += "/hda/godot_mesh_simplify6.hda";
 	HoudiniApi::load_asset_library_from_file(HoudiniEngine::get().get_session(), hda_path.ascii().get_data(), true, &hda_lib_id);
 }
 
